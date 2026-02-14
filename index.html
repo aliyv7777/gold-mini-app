@@ -1,33 +1,60 @@
-<div class="text-center relative">
-            <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-[#10b981] p-3 rounded-full text-black shadow-lg shadow-[#10b981]/40">
-                <i class="fas fa-bolt text-xl"></i>
-            </div>
-            <p class="text-[10px] mt-6">Signal</p>
-        </div>
-        <div class="text-center">
-            <i class="fas fa-copy text-xl"></i>
-            <p class="text-[10px] mt-1">CopyFX</p>
-        </div>
-        <div class="text-center">
-            <i class="fas fa-user text-xl"></i>
-            <p class="text-[10px] mt-1">Profil</p>
-        </div>
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ali.fx7777 Signal</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body { background-color: #0b0f14; color: white; font-family: sans-serif; overflow-x: hidden; }
+        .card { background-color: #1a1f26; border-radius: 20px; border: 1px solid #2d343d; }
+        .neon-green { color: #00ff88; text-shadow: 0 0 10px rgba(0, 255, 136, 0.4); }
+        .tp-item { background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; margin-bottom: 8px; }
+        .bottom-nav { background: #11151b; border-top: 1px solid #242930; position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-around; padding: 12px 0 24px 0; z-index: 1000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #4b5563; font-size: 10px; font-weight: bold; }
+        .nav-item.active { color: #00ff88; }
+        .main-btn { background: #00ff88; color: black; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: -25px; box-shadow: 0 0 20px rgba(0, 255, 136, 0.3); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="pb-24">
+
+    <div class="flex overflow-x-auto gap-2 p-4 no-scrollbar">
+        <button class="bg-[#00ff88] text-black px-5 py-2 rounded-full text-xs font-bold shrink-0">BTC</button>
+        <button class="bg-[#1a1f26] px-5 py-2 rounded-full text-xs font-bold shrink-0">ETH</button>
+        <button class="bg-[#1a1f26] text-[#00ff88] px-5 py-2 rounded-full text-xs font-bold shrink-0">GOLD</button>
+        <button class="bg-[#1a1f26] px-5 py-2 rounded-full text-xs font-bold shrink-0 uppercase">Eurusd</button>
     </div>
 
-    <script>
-        // Real narxni simulyatsiya qilish va TP'larni hisoblash
-        function updatePrices() {
-            // Haqiqiy API o'rniga dinamik narx
-            const basePrice = 2040 + Math.random() * 10;
-            document.getElementById('entry-price').innerText = basePrice.toFixed(2);
-            document.getElementById('tp1').innerText = (basePrice + 5).toFixed(2);
-            document.getElementById('tp2').innerText = (basePrice + 12).toFixed(2);
-            document.getElementById('tp3').innerText = (basePrice + 20).toFixed(2);
-            document.getElementById('sl').innerText = (basePrice - 8).toFixed(2);
-        }
+    <div class="p-4">
+        <div class="card p-5 shadow-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold italic">XAUUSD <span class="text-[10px] text-gray-500 not-italic ml-1">M15</span></h2>
+                <span class="bg-[#00ff88]/20 text-[#00ff88] px-3 py-1 rounded text-[10px] font-black tracking-tighter">BUY</span>
+            </div>
 
-        setInterval(updatePrices, 5000);
-        updatePrices();
-    </script>
-</body>
-</html>
+            <div class="flex justify-between items-center text-xs text-gray-400 mb-6 font-mono">
+                <span>Kirish narxi:</span>
+                <span class="text-white text-lg font-bold" id="price">2044.20</span>
+                <span><i class="far fa-clock"></i> 20:00:00</span>
+            </div>
+
+            <div class="space-y-2">
+                <div class="tp-item p-3 flex justify-between items-center">
+                    <span class="text-[10px] font-bold text-gray-500 uppercase">TP 1</span>
+                    <span class="neon-green font-bold text-lg font-mono" id="tp1">2054.40</span>
+                    <i class="fas fa-check-circle text-[#00ff88] text-sm"></i>
+                </div>
+                <div class="tp-item p-3 flex justify-between items-center">
+                    <span class="text-[10px] font-bold text-gray-500 uppercase">TP 2</span>
+                    <span class="neon-green font-bold text-lg font-mono" id="tp2">2064.10</span>
+                    <i class="fas fa-check-circle text-[#00ff88] text-sm"></i>
+                </div>
+                <div class="tp-item p-3 flex justify-between items-center">
+                    <span class="text-[10px] font-bold text-gray-500 uppercase">TP 3</span>
+                    <span class="neon-green font-bold text-lg font-mono" id="tp3">2077.50</span>
+                    <i class="fas fa-check-circle text-[#00ff88] text-sm"></i>
+                </div>
+            </div>
