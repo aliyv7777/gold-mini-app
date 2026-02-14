@@ -1,1 +1,74 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Signals Pro</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#0f172a] text-white p-4">
+
+    <div class="mb-6 rounded-xl overflow-hidden border border-gray-700 shadow-2xl">
+        <div class="bg-gray-800 p-2 text-center text-xs font-bold text-yellow-500 uppercase">XAUUSD Real-Time Chart</div>
+        <div id="tradingview_widget" style="height: 300px;"></div>
+    </div>
+
+    <div id="signal-section" class="space-y-4">
+        <div class="bg-gray-800 p-5 rounded-2xl border border-yellow-600/30 relative overflow-hidden">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <h2 class="text-2xl font-black text-yellow-500">GOLD / XAUUSD</h2>
+                    <p class="text-xs opacity-50">Analiz: RSI + Moving Average</p>
+                </div>
+                <span id="signal-type" class="px-3 py-1 rounded-full text-xs font-bold bg-green-500 animate-pulse text-white">STRONG BUY</span>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-3">
+                <div class="bg-black/40 p-3 rounded-xl text-center">
+                    <p class="text-[10px] opacity-60 uppercase">Entry</p>
+                    <p id="entry-price" class="font-bold text-lg text-blue-400">Loading...</p>
+                </div>
+                <div class="bg-black/40 p-3 rounded-xl text-center">
+                    <p class="text-[10px] opacity-60 uppercase">Take Profit</p>
+                    <p id="tp-price" class="font-bold text-lg text-green-400">Loading...</p>
+                </div>
+                <div class="bg-black/40 p-3 rounded-xl text-center">
+                    <p class="text-[10px] opacity-60 uppercase">Stop Loss</p>
+                    <p id="sl-price" class="font-bold text-lg text-red-400">Loading...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <script>
+        // Grafikni yuklash
+        new TradingView.widget({
+            "autosize": true,
+            "symbol": "OANDA:XAUUSD",
+            "interval": "15",
+            "timezone": "Etc/UTC",
+            "theme": "dark",
+            "style": "1",
+            "locale": "en",
+            "toolbar_bg": "#f1f3f6",
+            "enable_publishing": false,
+            "hide_top_toolbar": true,
+            "save_image": false,
+            "container_id": "tradingview_widget"
+        });
+
+        // Avtomatik Signal Generator (Matematik model)
+        function updateSignal() {
+            // Bu yerda keyinchalik haqiqiy API dan ma'lumot olamiz
+            // Hozircha namunaviy professional signal
+            document.getElementById('entry-price').innerText = "2045.30";
+            document.getElementById('tp-price').innerText = "2055.00";
+            document.getElementById('sl-price').innerText = "2038.00";
+        }
+        updateSignal();
+    </script>
+</body>
+</html>
 
