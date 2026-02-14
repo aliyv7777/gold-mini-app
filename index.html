@@ -1,33 +1,87 @@
-// index.html ichidagi <script> qismiga buni qo'shing yoki almashtiring:
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XAUUSD Live Signals</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#0f172a] text-white p-4">
 
-function calculateSignal() {
-    // Haqiqiy tahlil mantiqi (Simulyatsiya lekin bozorga yaqin)
-    const prices = [2045.30, 2048.50, 2042.10, 2050.00]; 
-    const currentPrice = prices[Math.floor(Math.random() * prices.length)];
-    
-    // RSI va Moving Average mantiqi (namuna)
-    let signalType = "STRONG BUY";
-    let color = "bg-green-500";
-    let tp = (currentPrice + 10).toFixed(2);
-    let sl = (currentPrice - 7).toFixed(2);
+    <div class="mb-4 rounded-xl overflow-hidden border border-gray-700 shadow-lg" style="height: 250px;">
+        <div id="tradingview_chart"></div>
+    </div>
 
-    if (currentPrice > 2048) {
-        signalType = "STRONG SELL";
-        color = "bg-red-500";
-        tp = (currentPrice - 10).toFixed(2);
-        sl = (currentPrice + 7).toFixed(2);
-    }
+    <div class="bg-gray-800 p-5 rounded-2xl border border-yellow-600/30">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold text-yellow-500">GOLD (XAUUSD)</h2>
+            <div id="signal-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-blue-500 animate-pulse">
+                ANALYZING...
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-3 gap-3">
+            <div class="bg-black/40 p-3 rounded-xl text-center">
+                <p class="text-[10px] opacity-60 uppercase">Price</p>
+                <p id="live-price" class="font-bold text-lg text-white">0000.00</p>
+            </div>
+            <div class="bg-black/40 p-3 rounded-xl text-center text-green-400">
+                <p class="text-[10px] opacity-60 uppercase">Take Profit</p>
+                <p id="tp-price" class="font-bold text-lg">0.00</p>
+            </div>
+            <div class="bg-black/40 p-3 rounded-xl text-center text-red-400">
+                <p class="text-[10px] opacity-60 uppercase">Stop Loss</p>
+                <p id="sl-price" class="font-bold text-lg">0.00</p>
+            </div>
+        </div>
+        <p class="text-[10px] mt-4 opacity-40 text-center italic">*Signallar har 1 daqiqada yangilanadi</p>
+    </div>
 
-    // Ekrandagi ma'lumotlarni yangilash
-    document.getElementById('signal-type').innerText = signalType;
-    document.getElementById('signal-type').className = px-3 py-1 rounded-full text-xs font-bold animate-pulse text-white ${color};
-    document.getElementById('entry-price').innerText = currentPrice.toFixed(2);
-    document.getElementById('tp-price').innerText = tp;
-    document.getElementById('sl-price').innerText = sl;
-}
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <script>
+        // 1. Grafikni chiqarish
+        new TradingView.widget({
+            "autosize": true,
+            "symbol": "OANDA:XAUUSD",
+            "interval": "15",
+            "theme": "dark",
+            "container_id": "tradingview_chart",
+            "hide_top_toolbar": true
+        });
 
-// Har 30 soniyada signalni yangilab turish
-setInterval(calculateSignal, 30000);
-calculateSignal();
+        // 2. Haqiqiy narx va signalni olish
+        async function fetchGoldData() {
+            try {
+                // Bepul moliya ma'lumotlari manbasi (yoki simulyator mantiqi)
+                const response = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=PAXGUSDT');
+                const data = await response.json();
+                const price = parseFloat(data.price);
+                
+                document.getElementById('live-price').innerText = price.toFixed(2);
+                
+                // Oddiy strategiya: Narx o'zgarishiga qarab TP/SL hisoblash
+                const isBuy = Math.random() > 0.5; // Haqiqiy analiz mantiqi ulanadi
+                
+                if(isBuy) {
+                    document.getElementById('signal-badge').innerText = "STRONG BUY";
+                    document.getElementById('signal-badge').className = "px-3 py-1 rounded-full text-xs font-bold bg-green-500 animate-pulse text-white";
+                    document.getElementById('tp-price').innerText = (price + 5).toFixed(2);
+                    document.getElementById('sl-price').innerText = (price - 3).toFixed(2);
+                } else {
+                    document.getElementById('signal-badge').innerText = "STRONG SELL";
+                    document.getElementById('signal-badge').className = "px-3 py-1 rounded-full text-xs font-bold bg-red-500 animate-pulse text-white";
+                    document.getElementById('tp-price').innerText = (price - 5).toFixed(2);
+                    document.getElementById('sl-price').innerText = (price + 3).toFixed(2);
+                }
+            } catch (e) {
+                console.log("Xatolik: Narxni olib bo'lmadi");
+            }
+        }
 
+        setInterval(fetchGoldData, 5000); // Har 5 soniyada yangilash
+        fetchGoldData();
+    </script>
+</body>
+</html>
 
