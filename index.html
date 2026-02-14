@@ -3,148 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ali.fx7777 - AI Pro</title>
+    <title>Mix Trade Pro</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        body { background-color: #0b0f14; color: white; font-family: sans-serif; }
+        body { background-color: #0b0f14; color: white; font-family: sans-serif; overflow-x: hidden; }
         .card { background-color: #1a1f26; border-radius: 20px; border: 1px solid #2d343d; }
-        .neon-green { color: #00ff88; text-shadow: 0 0 10px rgba(0, 255, 136, 0.4); }
-        .news-card { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-left: 4px solid #00ff88; }
-        .bottom-nav { background: #11151b; border-top: 1px solid #242930; position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-around; padding: 12px 0 24px 0; z-index: 1000; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: #4b5563; font-size: 10px; font-weight: bold; cursor: pointer; }
+        .bottom-nav { background: #11151b; border-top: 1px solid #242930; position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-around; padding: 12px 0 20px 0; z-index: 1000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; color: #4b5563; font-size: 10px; font-weight: bold; transition: 0.3s; }
         .nav-item.active { color: #00ff88; }
+        .page { display: none; padding: 15px; padding-bottom: 100px; }
+        .page.active { display: block; }
+        .neon-green { color: #00ff88; text-shadow: 0 0 10px rgba(0, 255, 136, 0.4); }
     </style>
 </head>
-<body class="pb-32">
+<body>
 
-    <div id="signal-page" class="p-4 space-y-4">
-        <div class="flex overflow-x-auto gap-2 mb-4 no-scrollbar">
-            <button onclick="changeSymbol('BTCUSDT')" class="bg-[#00ff88] text-black px-6 py-2 rounded-full text-xs font-bold">BTC</button>
-            <button onclick="changeSymbol('PAXGUSDT')" class="bg-[#1a1f26] text-[#00ff88] px-6 py-2 rounded-full text-xs font-bold">GOLD</button>
+    <div id="page-bosh" class="page active">
+        <h1 class="text-xl font-bold mb-4 italic"><i class="fas fa-chart-line mr-2"></i> MIX TRADE</h1>
+        <div class="flex gap-2 overflow-x-auto no-scrollbar mb-4">
+            <div class="card p-3 min-w-[120px] border-l-4 border-green-500">
+                <p class="text-[10px] text-gray-500">ETH/USDT</p>
+                <p class="text-green-500 font-bold">2,054.48</p>
+                <p class="text-[9px] text-green-500">+0.28%</p>
+            </div>
+            <div class="card p-3 min-w-[120px] border-l-4 border-yellow-500">
+                <p class="text-[10px] text-gray-500">Gold</p>
+                <p class="text-yellow-500 font-bold">5,042.20</p>
+                <p class="text-[9px] text-yellow-500">+2.46%</p>
+            </div>
         </div>
+        <h2 class="font-bold mb-2">Bozor Trendlari</h2>
+        <div class="card p-4 space-y-4">
+            <div class="flex justify-between items-center border-b border-gray-700 pb-2">
+                <span>SPXUSD</span>
+                <span class="text-blue-400 text-xs">S&P 500 Index</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span>NSXUSD</span>
+                <span class="text-blue-400 text-xs">US 100 Cash CFD</span>
+            </div>
+        </div>
+    </div>
 
-        <div class="card p-6 shadow-2xl">
+    <div id="page-signal" class="page">
+        <h1 class="text-xl font-bold mb-6 italic">XAUUSD SIGNAL</h1>
+        <div class="card p-5 mb-4">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-xl font-bold italic" id="sym-name">XAUUSD</h2>
-                <span id="signal-status" class="bg-blue-500/20 text-blue-500 px-4 py-1 rounded-lg text-xs font-black uppercase">Analyzing</span>
+                <span class="text-2xl font-black">XAUUSD</span>
+                <span class="bg-[#00ff88]/20 text-[#00ff88] px-4 py-1 rounded text-xs font-black">BUY SIGNAL</span>
             </div>
+            <div class="space-y-4">
+                <div class="flex justify-between text-sm"><span class="text-gray-400">Live Price:</span><span class="font-bold" id="live-price">5037.78</span></div>
+                <div class="p-3 bg-white/5 rounded-lg flex justify-between"><span>TP 1</span><span class="text-[#00ff88] font-bold">5062.97</span></div>
+                <div class="p-3 bg-white/5 rounded-lg flex justify-between"><span>TP 2</span><span class="text-[#00ff88] font-bold">5098.23</span></div>
+                <div class="p-3 bg-red-500/10 rounded-lg flex justify-between"><span>Stop Loss</span><span class="text-white font-bold">5017.63</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-copyfx" class="page">
+        <div class="card p-6 text-center mb-4 border-b-4 border-green-500">
+            <i class="fas fa-chart-area text-4xl text-[#00ff88] mb-3"></i>
+            <h2 class="text-xl font-bold">CopyTrading Dashboard</h2>
+            <p class="text-[10px] text-gray-400 mt-2">Professional treyderlarga ulaning va avtomatik daromad oling.</p>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+            <div class="card p-4"><p class="text-green-500 font-bold text-lg">+24.5%</p> <p class="text-[9px] text-gray-500">Oylik Foyda</p></div>
+            <div class="card p-4"><p class="text-green-500 font-bold text-lg">$1.2M+</p> <p class="text-[9px] text-gray-500">Kapital</p></div>
+        </div>
+    </div>
+
+    <div id="page-profil" class="page">
+        <div class="text-center mt-6">
+            <div class="relative inline-block">
+                <img id="user-photo" src="https://via.placeholder.com/100" class="w-24 h-24 rounded-full border-4 border-[#00ff88] mx-auto object-cover">
+            </div>
+            <h2 id="user-name" class="text-2xl font-bold mt-4 text-white font-mono">Foydalanuvchi</h2>
+            <p id="user-id" class="text-gray-500 text-xs mt-1 italic">ID: 00000000</p>
             
-            <div class="flex justify-between items-end mb-8">
-                <div>
-                    <p class="text-[10px] text-gray-500 uppercase">Live Price</p>
-                    <p class="text-2xl font-bold font-mono" id="live-p">0.00</p>
-                </div>
-                <div class="text-right">
-                    <p class="text-[10px] text-gray-500 uppercase">RSI (14)</p>
-                    <p class="text-sm font-bold text-yellow-500" id="rsi-v">50.0</p>
+            <div class="card p-6 mt-8">
+                <p class="text-gray-400 text-sm">Mening balansim</p>
+                <h3 class="text-3xl font-black text-[#00ff88] mt-2" id="user-balance">0 UZS</h3>
+                <div class="flex gap-3 mt-6">
+                    <button class="flex-1 bg-[#00ff88] text-black py-3 rounded-xl font-bold text-sm"><i class="fas fa-plus-circle mr-2"></i> To'ldirish</button>
+                    <button class="flex-1 bg-[#2d343d] text-white py-3 rounded-xl font-bold text-sm"><i class="fas fa-gem mr-2"></i> Tariflar</button>
                 </div>
             </div>
-
-            <div class="space-y-2" id="targets">
-                <div class="p-3 bg-white/5 rounded-lg flex justify-between">
-                    <span class="text-xs text-gray-400">TP 1</span>
-                    <span class="font-bold text-[#00ff88]" id="t1">---</span>
-                </div>
-                <div class="p-3 bg-white/5 rounded-lg flex justify-between">
-                    <span class="text-xs text-gray-400">TP 2</span>
-                    <span class="font-bold text-[#00ff88]" id="t2">---</span>
-                </div>
-                <div class="p-3 bg-red-500/10 rounded-lg flex justify-between">
-                    <span class="text-xs text-red-500">Stop Loss</span>
-                    <span class="font-bold" id="sl-v">---</span>
-                </div>
-            </div>
+            <p class="text-[#00ff88] font-bold text-[10px] tracking-widest mt-6 uppercase">Free Rejim</p>
         </div>
-
-        <h3 class="text-sm font-bold text-gray-400 mt-6 uppercase tracking-widest px-2">Bugungi Yangiliklar</h3>
-        <div class="news-card p-4 rounded-xl space-y-2">
-            <div class="flex justify-between items-start">
-                <span class="bg-red-500 text-[9px] px-2 py-0.5 rounded font-bold uppercase">High Impact</span>
-                <span class="text-[10px] text-gray-500">18:30 (Toshkent)</span>
-            </div>
-            <p class="text-xs font-bold leading-tight">AQSH: Core Retail Sales (Oylik xabarnoma). Oltin va Dollarda katta o'zgarish kutilmoqda!</p>
-        </div>
-        
-        <div class="news-card p-4 rounded-xl space-y-2 opacity-80">
-            <div class="flex justify-between items-start">
-                <span class="bg-yellow-500 text-black text-[9px] px-2 py-0.5 rounded font-bold uppercase">Medium</span>
-                <span class="text-[10px] text-gray-500">14:00 (Toshkent)</span>
-            </div>
-            <p class="text-xs font-bold leading-tight">Yevropa Ittifoqi iqtisodiy o'sish prognozi e'lon qilinadi.</p>
-        </div>
-
-        <a href="https://t.me/aliyv7777" class="block bg-[#1a1f26] p-4 rounded-2xl text-center border border-[#00ff88]/20">
-            <span class="text-xs text-gray-400">Yordam va VIP uchun:</span>
-            <p class="text-[#00ff88] font-bold">@aliyv7777</p>
-        </a>
     </div>
 
     <nav class="bottom-nav">
-        <div class="nav-item active">
-            <i class="fas fa-bolt text-xl"></i>
-            <span>SIGNAL</span>
-        </div>
-        <div class="nav-item">
-            <i class="fas fa-newspaper text-xl"></i>
-            <span>NEWS</span>
-        </div>
-        <div class="nav-item">
-            <i class="fas fa-user-circle text-xl"></i>
-            <span>PROFIL</span>
-        </div>
+        <div class="nav-item active" onclick="switchPage('bosh', this)"><i class="fas fa-home text-lg"></i><span>Bosh</span></div>
+        <div class="nav-item" onclick="switchPage('signal', this)"><i class="fas fa-bolt text-lg"></i><span>Signal</span></div>
+        <div class="nav-item" onclick="switchPage('copyfx', this)"><i class="fas fa-layer-group text-lg"></i><span>CopyFX</span></div>
+        <div class="nav-item" onclick="switchPage('profil', this)"><i class="fas fa-user-circle text-lg"></i><span>Profil</span></div>
     </nav>
 
     <script>
-        let currentSymbol = 'PAXGUSDT';
+        const tg = window.Telegram.WebApp;
+        tg.expand();
 
-        async function updateLogic() {
-            try {
-                const res = await fetch(`https://api.binance.com/api/v3/klines?symbol=${currentSymbol}&interval=15m&limit=20`);
-                const data = await res.json();
-                const prices = data.map(d => parseFloat(d[4]));
-                const p = prices[prices.length - 1];
-                
-                // RSI Hisoblash
-                let gains = 0, losses = 0;
-                for(let i=1; i<prices.length; i++) {
-                    let d = prices[i] - prices[i-1];
-                    d > 0 ? gains += d : losses -= d;
-                }
-                const rsi = 100 - (100 / (1 + (gains/losses)));
-
-                document.getElementById('live-p').innerText = p.toFixed(2);
-                document.getElementById('rsi-v').innerText = rsi.toFixed(1);
-
-                const badge = document.getElementById('signal-status');
-                if(rsi < 40) {
-                    badge.innerText = "Buy Signal"; badge.className = "bg-green-500/20 text-[#00ff88] px-4 py-1 rounded-lg text-xs font-black uppercase";
-                    document.getElementById('t1').innerText = (p + (p*0.005)).toFixed(2);
-                    document.getElementById('t2').innerText = (p + (p*0.012)).toFixed(2);
-                    document.getElementById('sl-v').innerText = (p - (p*0.004)).toFixed(2);
-                } else if(rsi > 60) {
-                    badge.innerText = "Sell Signal"; badge.className = "bg-red-500/20 text-red-500 px-4 py-1 rounded-lg text-xs font-black uppercase";
-                    document.getElementById('t1').innerText = (p - (p*0.005)).toFixed(2);
-                    document.getElementById('t2').innerText = (p - (p*0.012)).toFixed(2);
-                    document.getElementById('sl-v').innerText = (p + (p*0.004)).toFixed(2);
-                } else {
-                    badge.innerText = "Waiting"; badge.className = "bg-blue-500/20 text-blue-500 px-4 py-1 rounded-lg text-xs font-black uppercase";
-                    document.getElementById('t1').innerText = "---";
-                    document.getElementById('t2').innerText = "---";
-                    document.getElementById('sl-v').innerText = "---";
-                }
-            } catch (e) { console.log("Error"); }
+        // Profil ma'lumotlarini Telegramdan olish
+        const user = tg.initDataUnsafe?.user;
+        if (user) {
+            document.getElementById('user-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+            document.getElementById('user-id').innerText = "ID: " + user.id;
+            if (user.photo_url) {
+                document.getElementById('user-photo').src = user.photo_url;
+            }
         }
 
-        function changeSymbol(s) {
-            currentSymbol = s;
-            document.getElementById('sym-name').innerText = s === 'PAXGUSDT' ? 'XAUUSD' : 'BTCUSD';
-            updateLogic();
+        function switchPage(pageId, el) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+            el.classList.add('active');
+            tg.HapticFeedback.impactOccurred('light');
         }
-
-        setInterval(updateLogic, 5000);
-        updateLogic();
     </script>
 </body>
 </html>
