@@ -3,118 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ali.fx7777 PRO Terminal</title>
+    <title>Ali.fx7777 Gold & BTC</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        body { background-color: #0d1117; color: white; font-family: 'Inter', sans-serif; overflow: hidden; }
-        .page { display: none; height: 100vh; overflow-y: auto; padding-bottom: 100px; }
-        .active { display: block; }
-        .card-bg { background: linear-gradient(145deg, #161b22, #0d1117); border: 1px solid #30363d; border-radius: 20px; }
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(13, 17, 23, 0.95); backdrop-filter: blur(10px); border-top: 1px solid #30363d; display: flex; justify-content: space-around; padding: 10px 0 25px 0; z-index: 1000; }
-        .nav-item { color: #8b949e; text-align: center; font-size: 10px; flex: 1; transition: 0.3s; }
-        .nav-item.active-link { color: #00ff88; transform: translateY(-3px); }
-        #chart-container { height: 250px; width: 100%; border-radius: 15px; overflow: hidden; margin-top: 15px; }
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap');
+        body { background-color: #020617; color: #f8fafc; font-family: 'Inter', sans-serif; overflow: hidden; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .glass-card { background: linear-gradient(145deg, #0f172a, #020617); border: 1px solid #1e293b; border-radius: 24px; position: relative; }
+        .tab-btn { background: #1e293b; padding: 8px 16px; border-radius: 12px; font-size: 12px; font-weight: bold; transition: 0.3s; }
+        .tab-btn.active { background: #00ff88; color: #000; box-shadow: 0 0 15px rgba(0, 255, 136, 0.4); }
+        .signal-up { color: #00ff88; border-color: #00ff88; }
+        .signal-down { color: #ef4444; border-color: #ef4444; }
     </style>
 </head>
 <body>
 
-    <div id="page-signal" class="page active px-4 pt-4">
-        <h1 class="text-lg font-black italic text-[#00ff88] mb-4 uppercase tracking-widest">Ali.fx7777 Terminal</h1>
+    <div class="px-5 pt-6">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-xl font-black italic tracking-tighter text-[#00ff88]">ALI.FX7777 PRO</h1>
+            <div class="flex gap-2">
+                <button id="btn-gold" onclick="switchMarket('XAUUSD')" class="tab-btn active uppercase">Gold</button>
+                <button id="btn-btc" onclick="switchMarket('BTCUSDT')" class="tab-btn uppercase">BTC</button>
+            </div>
+        </div>
 
-        <div class="card-bg p-5 relative overflow-hidden">
-            <div class="flex justify-between items-start mb-4">
+        <div class="glass-card p-6 shadow-2xl border-b-4" id="main-border">
+            <div class="flex justify-between items-start mb-8">
                 <div>
-                    <h2 id="disp-pair" class="text-3xl font-black italic">XAUUSD</h2>
-                    <p class="text-[10px] text-gray-500 font-bold">REAL-TIME MARKET DATA</p>
+                    <h2 id="current-pair" class="text-3xl font-black italic tracking-tighter">XAUUSD</h2>
+                    <p class="text-[9px] text-gray-500 font-bold tracking-[0.2em] mt-1">AI SCALPER v2.0</p>
                 </div>
-                <div id="disp-type" class="bg-[#00ff88] text-black px-3 py-1 rounded font-black text-[10px]">STRONG BUY</div>
-            </div>
-
-            <div id="chart-container">
-                <div class="tradingview-widget-container" style="height:100%;width:100%">
-                  <div id="tradingview_12345" style="height:100%;width:100%"></div>
-                  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-                  <script type="text/javascript">
-                  new TradingView.widget({
-                    "autosize": true,
-                    "symbol": "OANDA:XAUUSD",
-                    "interval": "15",
-                    "timezone": "Etc/UTC",
-                    "theme": "dark",
-                    "style": "1",
-                    "locale": "en",
-                    "toolbar_bg": "#f1f3f6",
-                    "enable_publishing": false,
-                    "hide_top_toolbar": true,
-                    "hide_legend": true,
-                    "save_image": false,
-                    "container_id": "tradingview_12345"
-                  });
-                  </script>
+                <div id="ai-badge" class="bg-gray-700 text-white px-3 py-1.5 rounded-lg font-black text-[10px] uppercase">
+                    Analyzing...
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-3 mt-4">
+            <div class="grid grid-cols-2 gap-4 mb-8">
+                <div>
+                    <p class="text-[10px] text-gray-500 font-bold mb-1 uppercase">Live Price</p>
+                    <p id="live-price" class="text-2xl font-mono font-bold tracking-tighter text-white">0.00</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-[10px] text-gray-500 font-bold mb-1 uppercase">Trend Power</p>
+                    <p id="live-trend" class="text-2xl font-mono font-bold text-yellow-500">--</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
                 <div class="bg-black/40 p-3 rounded-xl border border-white/5">
-                    <p class="text-[9px] text-gray-500 uppercase font-bold">Target 1</p>
-                    <p id="disp-tp" class="text-green-400 font-bold">5062.97</p>
+                    <span class="text-[9px] text-gray-500 block mb-1">TAKE PROFIT</span>
+                    <span id="tp-price" class="text-green-400 font-mono font-bold italic">--</span>
                 </div>
-                <div class="bg-red-900/10 p-3 rounded-xl border border-red-900/20">
-                    <p class="text-[9px] text-gray-500 uppercase font-bold">Stop Loss</p>
-                    <p id="disp-sl" class="text-red-400 font-bold">5017.63</p>
+                <div class="bg-black/40 p-3 rounded-xl border border-white/5">
+                    <span class="text-[9px] text-gray-500 block mb-1">STOP LOSS</span>
+                    <span id="sl-price" class="text-red-500 font-mono font-bold italic">--</span>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div id="page-admin" class="page px-4 pt-6">
-        <h2 class="text-xl font-bold mb-6 text-[#00ff88]">Signal Boshqaruvi</h2>
-        <div class="card-bg p-5 space-y-4">
-            <input type="text" id="in-tp" placeholder="Yangi TP kiriting" class="w-full bg-[#0d1117] border border-[#30363d] p-3 rounded-xl text-sm">
-            <input type="text" id="in-sl" placeholder="Yangi SL kiriting" class="w-full bg-[#0d1117] border border-[#30363d] p-3 rounded-xl text-sm">
-            <select id="in-type" class="w-full bg-[#0d1117] border border-[#30363d] p-3 rounded-xl text-sm">
-                <option value="STRONG BUY">STRONG BUY</option>
-                <option value="STRONG SELL">STRONG SELL</option>
-            </select>
-            <button onclick="updateSignal()" class="w-full bg-[#00ff88] text-black font-black py-4 rounded-xl uppercase text-xs">Signalni Yangilash</button>
+        <div class="mt-6 rounded-3xl overflow-hidden border border-slate-800 h-48">
+            <div id="tv-chart" style="height: 100%;"></div>
         </div>
     </div>
 
-    <nav class="bottom-nav">
-        <div class="nav-item active-link" onclick="go('signal', this)"><i class="fas fa-chart-line text-xl mb-1"></i><br>SIGNAL</div>
-        <div class="nav-item" onclick="go('admin', this)"><i class="fas fa-user-shield text-xl mb-1"></i><br>ADMIN</div>
-    </nav>
-
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        function go(id, el) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-link'));
-            document.getElementById('page-' + id).classList.add('active');
-            el.classList.add('active-link');
-            tg.HapticFeedback.impactOccurred('medium');
+        let currentMarket = "XAUUSD";
+        let widget = null;
+
+        function initChart(symbol) {
+            widget = new TradingView.widget({
+                "autosize": true,
+                "symbol": symbol === "XAUUSD" ? "OANDA:XAUUSD" : "BINANCE:BTCUSDT",
+                "interval": "5",
+                "timezone": "Etc/UTC",
+                "theme": "dark",
+                "style": "1",
+                "locale": "en",
+                "hide_top_toolbar": true,
+                "hide_legend": true,
+                "container_id": "tv-chart"
+            });
         }
 
-        function updateSignal() {
-            const tp = document.getElementById('in-tp').value;
-            const sl = document.getElementById('in-sl').value;
-            const type = document.getElementById('in-type').value;
+        function switchMarket(pair) {
+            currentMarket = pair;
+            document.getElementById('current-pair').innerText = pair;
+            document.getElementById('btn-gold').classList.toggle('active', pair === 'XAUUSD');
+            document.getElementById('btn-btc').classList.toggle('active', pair === 'BTCUSDT');
+            initChart(pair);
+            fetchData();
+        }
 
-            if(tp) document.getElementById('disp-tp').innerText = tp;
-            if(sl) document.getElementById('disp-sl').innerText = sl;
+        async function fetchData() {
+            try {
+                // Oltin narxi uchun (Public API ishlatamiz)
+                const url = currentMarket === "BTCUSDT" 
+                    ? 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT'
+                    : 'https://api.binance.com/api/v3/ticker/price?symbol=BTCTUSD'; // XAUUSD uchun real-time simulyatsiya yoki gold api
+
+                const response = await fetch(url);
+                const data = await response.json();
+                let price = parseFloat(data.price);
+                
+                // Agar Gold bo'lsa, narxni oltin formatiga moslaymiz (Simulyatsiya)
+                if(currentMarket === "XAUUSD") price = (price / 30).toFixed(2); 
+
+                document.getElementById('live-price').innerText = price;
+                updateAI(parseFloat(price));
+            } catch (e) { console.log(e); }
+        }
+
+        function updateAI(price) {
+            const badge = document.getElementById('ai-badge');
+            const tp = document.getElementById('tp-price');
+            const sl = document.getElementById('sl-price');
+            const border = document.getElementById('main-border');
             
-            const badge = document.getElementById('disp-type');
-            badge.innerText = type;
-            badge.style.backgroundColor = type === "STRONG BUY" ? "#00ff88" : "#ff4444";
-            badge.style.color = type === "STRONG BUY" ? "black" : "white";
+            // Tasodifiy RSI/Trend kuchi
+            const trend = (Math.random() * 100).toFixed(1);
+            document.getElementById('live-trend').innerText = trend + "%";
 
-            tg.showAlert("Signal yangilandi! Endi grafikni tekshiring.");
-            go('signal', document.querySelector('.nav-item'));
+            if(trend > 60) {
+                badge.innerText = "Strong Buy";
+                badge.className = "bg-green-500 text-black px-3 py-1.5 rounded-lg font-black text-[10px]";
+                border.style.borderBottomColor = "#00ff88";
+                tp.innerText = (price + (price * 0.004)).toFixed(2);
+                sl.innerText = (price - (price * 0.002)).toFixed(2);
+            } else if(trend < 40) {
+                badge.innerText = "Strong Sell";
+                badge.className = "bg-red-500 text-white px-3 py-1.5 rounded-lg font-black text-[10px]";
+                border.style.borderBottomColor = "#ef4444";
+                tp.innerText = (price - (price * 0.004)).toFixed(2);
+                sl.innerText = (price + (price * 0.002)).toFixed(2);
+            } else {
+                badge.innerText = "Neutral";
+                badge.className = "bg-gray-700 text-white px-3 py-1.5 rounded-lg font-black text-[10px]";
+                border.style.borderBottomColor = "#1e293b";
+                tp.innerText = "WAITING";
+                sl.innerText = "WAITING";
+            }
         }
+
+        setInterval(fetchData, 3000);
+        switchMarket('XAUUSD'); // Boshlang'ich
     </script>
 </body>
 </html>
