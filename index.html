@@ -3,87 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ali.fx7777 Admin Pro</title>
+    <title>Ali.fx7777 PRO Terminal</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        body { background-color: #0b1016; color: white; font-family: 'Inter', sans-serif; overflow: hidden; }
-        .page { display: none; height: 100vh; overflow-y: auto; padding-bottom: 120px; }
-        .active { display: block; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .card-bg { background-color: #171c26; border-radius: 1.5rem; border: 1px solid #242b37; }
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #0b1016; border-top: 1px solid #1f2630; display: flex; justify-content: space-around; padding: 15px 0 30px 0; z-index: 1000; }
-        .nav-item { color: #5b6371; text-align: center; font-size: 10px; flex: 1; font-weight: bold; }
-        .nav-item.active-link { color: #00ff88; }
-        input { background: #0b1016; border: 1px solid #242b37; padding: 10px; border-radius: 10px; color: white; width: 100%; margin-bottom: 10px; font-size: 12px; }
+        body { background-color: #0d1117; color: white; font-family: 'Inter', sans-serif; overflow: hidden; }
+        .page { display: none; height: 100vh; overflow-y: auto; padding-bottom: 100px; }
+        .active { display: block; }
+        .card-bg { background: linear-gradient(145deg, #161b22, #0d1117); border: 1px solid #30363d; border-radius: 20px; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(13, 17, 23, 0.95); backdrop-filter: blur(10px); border-top: 1px solid #30363d; display: flex; justify-content: space-around; padding: 10px 0 25px 0; z-index: 1000; }
+        .nav-item { color: #8b949e; text-align: center; font-size: 10px; flex: 1; transition: 0.3s; }
+        .nav-item.active-link { color: #00ff88; transform: translateY(-3px); }
+        #chart-container { height: 250px; width: 100%; border-radius: 15px; overflow: hidden; margin-top: 15px; }
     </style>
 </head>
 <body>
 
-    <div id="page-signal" class="page active px-4 pt-6">
-        <h1 class="text-xl font-bold mb-6 italic text-[#00ff88]">ALI.FX7777 TERMINAL</h1>
-        
-        <div class="card-bg p-6 border-b-4 border-green-500 shadow-lg shadow-green-500/10">
-            <div class="flex justify-between items-center mb-6">
-                <h2 id="disp-pair" class="text-3xl font-black italic uppercase">XAUUSD</h2>
-                <div id="disp-type" class="bg-green-500 text-black px-3 py-1 rounded text-[10px] font-black uppercase">Strong Buy</div>
-            </div>
+    <div id="page-signal" class="page active px-4 pt-4">
+        <h1 class="text-lg font-black italic text-[#00ff88] mb-4 uppercase tracking-widest">Ali.fx7777 Terminal</h1>
 
-            <div class="flex justify-between items-end mb-8">
+        <div class="card-bg p-5 relative overflow-hidden">
+            <div class="flex justify-between items-start mb-4">
                 <div>
-                    <p class="text-[10px] text-gray-500 uppercase font-bold">Live Price</p>
-                    <p id="disp-price" class="text-3xl font-bold tracking-tighter">5037.78</p>
+                    <h2 id="disp-pair" class="text-3xl font-black italic">XAUUSD</h2>
+                    <p class="text-[10px] text-gray-500 font-bold">REAL-TIME MARKET DATA</p>
                 </div>
-                <div class="text-right">
-                    <p class="text-[10px] text-gray-500 uppercase font-bold">RSI (14)</p>
-                    <p id="disp-rsi" class="text-yellow-500 font-bold text-xl">32.5</p>
+                <div id="disp-type" class="bg-[#00ff88] text-black px-3 py-1 rounded font-black text-[10px]">STRONG BUY</div>
+            </div>
+
+            <div id="chart-container">
+                <div class="tradingview-widget-container" style="height:100%;width:100%">
+                  <div id="tradingview_12345" style="height:100%;width:100%"></div>
+                  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+                  <script type="text/javascript">
+                  new TradingView.widget({
+                    "autosize": true,
+                    "symbol": "OANDA:XAUUSD",
+                    "interval": "15",
+                    "timezone": "Etc/UTC",
+                    "theme": "dark",
+                    "style": "1",
+                    "locale": "en",
+                    "toolbar_bg": "#f1f3f6",
+                    "enable_publishing": false,
+                    "hide_top_toolbar": true,
+                    "hide_legend": true,
+                    "save_image": false,
+                    "container_id": "tradingview_12345"
+                  });
+                  </script>
                 </div>
             </div>
 
-            <div class="space-y-3">
-                <div class="bg-black/40 p-4 rounded-2xl flex justify-between border border-white/5">
-                    <span class="text-gray-400 font-bold text-xs uppercase">Target 1</span>
-                    <span id="disp-tp" class="text-green-400 font-bold">5062.97</span>
+            <div class="grid grid-cols-2 gap-3 mt-4">
+                <div class="bg-black/40 p-3 rounded-xl border border-white/5">
+                    <p class="text-[9px] text-gray-500 uppercase font-bold">Target 1</p>
+                    <p id="disp-tp" class="text-green-400 font-bold">5062.97</p>
                 </div>
-                <div class="bg-red-500/10 p-4 rounded-2xl flex justify-between border border-red-500/20">
-                    <span class="text-red-400 font-bold text-xs uppercase">Stop Loss</span>
-                    <span id="disp-sl" class="font-bold">5017.63</span>
+                <div class="bg-red-900/10 p-3 rounded-xl border border-red-900/20">
+                    <p class="text-[9px] text-gray-500 uppercase font-bold">Stop Loss</p>
+                    <p id="disp-sl" class="text-red-400 font-bold">5017.63</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="page-profil" class="page px-4 pt-10">
-        <div class="text-center">
-            <img id="u-img" src="https://via.placeholder.com/100" class="w-20 h-20 rounded-full border-2 border-green-500 mx-auto mb-4">
-            <h2 id="u-name" class="font-bold">Muxammadali</h2>
-            
-            <div class="card-bg p-6 mt-10 text-left border-t-2 border-green-500">
-                <h3 class="text-sm font-bold text-green-500 mb-4 uppercase tracking-widest"><i class="fas fa-user-shield mr-2"></i>Admin Signal Control</h3>
-                
-                <input type="text" id="in-pair" placeholder="Pair (masalan: BTCUSDT)">
-                <input type="text" id="in-price" placeholder="Hozirgi narx">
-                <div class="flex gap-2">
-                    <input type="text" id="in-tp" placeholder="TP">
-                    <input type="text" id="in-sl" placeholder="SL">
-                </div>
-                <input type="text" id="in-rsi" placeholder="RSI">
-                
-                <select id="in-type" class="w-full bg-[#0b1016] border border-[#242b37] p-2 rounded-xl mb-4 text-xs text-white">
-                    <option value="Strong Buy">Strong Buy</option>
-                    <option value="Strong Sell">Strong Sell</option>
-                    <option value="Neutral">Neutral</option>
-                </select>
-
-                <button onclick="updateSignal()" class="w-full bg-green-500 text-black font-black py-3 rounded-xl uppercase text-xs">Signalni Yangilash</button>
-            </div>
+    <div id="page-admin" class="page px-4 pt-6">
+        <h2 class="text-xl font-bold mb-6 text-[#00ff88]">Signal Boshqaruvi</h2>
+        <div class="card-bg p-5 space-y-4">
+            <input type="text" id="in-tp" placeholder="Yangi TP kiriting" class="w-full bg-[#0d1117] border border-[#30363d] p-3 rounded-xl text-sm">
+            <input type="text" id="in-sl" placeholder="Yangi SL kiriting" class="w-full bg-[#0d1117] border border-[#30363d] p-3 rounded-xl text-sm">
+            <select id="in-type" class="w-full bg-[#0d1117] border border-[#30363d] p-3 rounded-xl text-sm">
+                <option value="STRONG BUY">STRONG BUY</option>
+                <option value="STRONG SELL">STRONG SELL</option>
+            </select>
+            <button onclick="updateSignal()" class="w-full bg-[#00ff88] text-black font-black py-4 rounded-xl uppercase text-xs">Signalni Yangilash</button>
         </div>
     </div>
 
     <nav class="bottom-nav">
-        <div class="nav-item active-link" onclick="go('signal', this)"><i class="fas fa-bolt text-xl mb-1"></i><br>SIGNAL</div>
-        <div class="nav-item" onclick="go('profil', this)"><i class="fas fa-tools text-xl mb-1"></i><br>ADMIN</div>
+        <div class="nav-item active-link" onclick="go('signal', this)"><i class="fas fa-chart-line text-xl mb-1"></i><br>SIGNAL</div>
+        <div class="nav-item" onclick="go('admin', this)"><i class="fas fa-user-shield text-xl mb-1"></i><br>ADMIN</div>
     </nav>
 
     <script>
@@ -98,34 +99,21 @@
             tg.HapticFeedback.impactOccurred('medium');
         }
 
-        // Signalni yangilash funksiyasi
         function updateSignal() {
-            const pair = document.getElementById('in-pair').value;
-            const price = document.getElementById('in-price').value;
             const tp = document.getElementById('in-tp').value;
             const sl = document.getElementById('in-sl').value;
-            const rsi = document.getElementById('in-rsi').value;
             const type = document.getElementById('in-type').value;
 
-            // Ekranda ko'rsatish
-            if(pair) document.getElementById('disp-pair').innerText = pair;
-            if(price) document.getElementById('disp-price').innerText = price;
             if(tp) document.getElementById('disp-tp').innerText = tp;
             if(sl) document.getElementById('disp-sl').innerText = sl;
-            if(rsi) document.getElementById('disp-rsi').innerText = rsi;
             
             const badge = document.getElementById('disp-type');
             badge.innerText = type;
-            badge.className = type.includes('Buy') ? "bg-green-500 text-black px-3 py-1 rounded text-[10px] font-black uppercase" : "bg-red-500 text-white px-3 py-1 rounded text-[10px] font-black uppercase";
+            badge.style.backgroundColor = type === "STRONG BUY" ? "#00ff88" : "#ff4444";
+            badge.style.color = type === "STRONG BUY" ? "black" : "white";
 
-            tg.showAlert("Signal muvaffaqiyatli o'zgartirildi!");
-            go('signal', document.querySelector('.nav-item')); // Signal betiga qaytish
-        }
-
-        const u = tg.initDataUnsafe?.user;
-        if(u) {
-            document.getElementById('u-name').innerText = u.first_name;
-            if(user.photo_url) document.getElementById('u-img').src = user.photo_url;
+            tg.showAlert("Signal yangilandi! Endi grafikni tekshiring.");
+            go('signal', document.querySelector('.nav-item'));
         }
     </script>
 </body>
