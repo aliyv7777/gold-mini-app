@@ -1,75 +1,132 @@
-// 🧠 Signalni hisoblash algoritmi (Soddalashtirilgan aqlli mantiq)
-function generateSmartSignal(price, rsi) {
-    let signalType = "WAIT"; // Kutish
-    let strength = "LOW";    // Kuchlanish
-    
-    // Aniq signal shartlari:
-    // 1. RSI 30 dan past bo'lsa va narx ko'tarilishni boshlasa -> BUY
-    // 2. RSI 70 dan baland bo'lsa va narx tushishni boshlasa -> SELL
-    
-    if (rsi < 35) {
-        signalType = "STRONG BUY";
-        strength = "HIGH";
-    } else if (rsi > 65) {
-        signalType = "STRONG SELL";
-        strength = "HIGH";
-    } else {
-        signalType = "NEUTRAL";
-        strength = "MEDIUM";
-    }
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ali.fx7777 Admin Pro</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body { background-color: #0b1016; color: white; font-family: 'Inter', sans-serif; overflow: hidden; }
+        .page { display: none; height: 100vh; overflow-y: auto; padding-bottom: 120px; }
+        .active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .card-bg { background-color: #171c26; border-radius: 1.5rem; border: 1px solid #242b37; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #0b1016; border-top: 1px solid #1f2630; display: flex; justify-content: space-around; padding: 15px 0 30px 0; z-index: 1000; }
+        .nav-item { color: #5b6371; text-align: center; font-size: 10px; flex: 1; font-weight: bold; }
+        .nav-item.active-link { color: #00ff88; }
+        input { background: #0b1016; border: 1px solid #242b37; padding: 10px; border-radius: 10px; color: white; width: 100%; margin-bottom: 10px; font-size: 12px; }
+    </style>
+</head>
+<body>
 
-    return { type: signalType, power: strength };
-}<div id="page-signal" class="page active px-4 pt-6">
-    <div class="card-bg p-6 border-b-4 border-green-500">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-black italic">XAUUSD</h2>
-            <div id="signal-badge" class="bg-green-500 text-black px-3 py-1 rounded-md text-[10px] font-black uppercase">
-                Strong Buy
+    <div id="page-signal" class="page active px-4 pt-6">
+        <h1 class="text-xl font-bold mb-6 italic text-[#00ff88]">ALI.FX7777 TERMINAL</h1>
+        
+        <div class="card-bg p-6 border-b-4 border-green-500 shadow-lg shadow-green-500/10">
+            <div class="flex justify-between items-center mb-6">
+                <h2 id="disp-pair" class="text-3xl font-black italic uppercase">XAUUSD</h2>
+                <div id="disp-type" class="bg-green-500 text-black px-3 py-1 rounded text-[10px] font-black uppercase">Strong Buy</div>
             </div>
-        </div>
 
-        <div class="flex justify-between items-center mb-8">
-            <div>
-                <p class="text-[10px] text-gray-500 uppercase font-bold">Live Price</p>
-                <p id="live-gold" class="text-3xl font-bold tracking-tighter">5037.78</p>
+            <div class="flex justify-between items-end mb-8">
+                <div>
+                    <p class="text-[10px] text-gray-500 uppercase font-bold">Live Price</p>
+                    <p id="disp-price" class="text-3xl font-bold tracking-tighter">5037.78</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-[10px] text-gray-500 uppercase font-bold">RSI (14)</p>
+                    <p id="disp-rsi" class="text-yellow-500 font-bold text-xl">32.5</p>
+                </div>
             </div>
-            <div class="text-right">
-                <p class="text-[10px] text-gray-500 uppercase font-bold">RSI (14)</p>
-                <p id="live-rsi" class="text-yellow-500 font-bold text-xl">32.5</p>
-            </div>
-        </div>
 
-        <div class="space-y-3">
-            <div class="bg-black/40 p-4 rounded-2xl flex justify-between border border-white/5">
-                <span class="text-gray-400 font-bold text-xs uppercase">Target 1</span>
-                <span id="tp-1" class="text-green-400 font-bold">5062.97</span>
-            </div>
-            <div class="bg-red-500/10 p-4 rounded-2xl flex justify-between border border-red-500/20">
-                <span class="text-red-400 font-bold text-xs uppercase">Stop Loss</span>
-                <span id="sl" class="font-bold">5017.63</span>
+            <div class="space-y-3">
+                <div class="bg-black/40 p-4 rounded-2xl flex justify-between border border-white/5">
+                    <span class="text-gray-400 font-bold text-xs uppercase">Target 1</span>
+                    <span id="disp-tp" class="text-green-400 font-bold">5062.97</span>
+                </div>
+                <div class="bg-red-500/10 p-4 rounded-2xl flex justify-between border border-red-500/20">
+                    <span class="text-red-400 font-bold text-xs uppercase">Stop Loss</span>
+                    <span id="disp-sl" class="font-bold">5017.63</span>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<script>
-    // Haqiqiy bozor simulyatsiyasi (Aniqroq mantiq bilan)
-    function updateMarket() {
-        let currentPrice = 5037.78 + (Math.random() * 2 - 1);
-        let currentRSI = 30 + (Math.random() * 10); // RSI simulyatsiyasi
+    <div id="page-profil" class="page px-4 pt-10">
+        <div class="text-center">
+            <img id="u-img" src="https://via.placeholder.com/100" class="w-20 h-20 rounded-full border-2 border-green-500 mx-auto mb-4">
+            <h2 id="u-name" class="font-bold">Muxammadali</h2>
+            
+            <div class="card-bg p-6 mt-10 text-left border-t-2 border-green-500">
+                <h3 class="text-sm font-bold text-green-500 mb-4 uppercase tracking-widest"><i class="fas fa-user-shield mr-2"></i>Admin Signal Control</h3>
+                
+                <input type="text" id="in-pair" placeholder="Pair (masalan: BTCUSDT)">
+                <input type="text" id="in-price" placeholder="Hozirgi narx">
+                <div class="flex gap-2">
+                    <input type="text" id="in-tp" placeholder="TP">
+                    <input type="text" id="in-sl" placeholder="SL">
+                </div>
+                <input type="text" id="in-rsi" placeholder="RSI">
+                
+                <select id="in-type" class="w-full bg-[#0b1016] border border-[#242b37] p-2 rounded-xl mb-4 text-xs text-white">
+                    <option value="Strong Buy">Strong Buy</option>
+                    <option value="Strong Sell">Strong Sell</option>
+                    <option value="Neutral">Neutral</option>
+                </select>
 
-        document.getElementById('live-gold').innerText = currentPrice.toFixed(2);
-        document.getElementById('live-rsi').innerText = currentRSI.toFixed(1);
+                <button onclick="updateSignal()" class="w-full bg-green-500 text-black font-black py-3 rounded-xl uppercase text-xs">Signalni Yangilash</button>
+            </div>
+        </div>
+    </div>
 
-        // Signalni dinamik o'zgartirish
-        const badge = document.getElementById('signal-badge');
-        if (currentRSI < 35) {
-            badge.innerText = "Strong Buy";
-            badge.className = "bg-green-500 text-black px-3 py-1 rounded-md text-[10px] font-black uppercase";
-        } else {
-            badge.innerText = "Neutral";
-            badge.className = "bg-gray-600 text-white px-3 py-1 rounded-md text-[10px] font-black uppercase";
+    <nav class="bottom-nav">
+        <div class="nav-item active-link" onclick="go('signal', this)"><i class="fas fa-bolt text-xl mb-1"></i><br>SIGNAL</div>
+        <div class="nav-item" onclick="go('profil', this)"><i class="fas fa-tools text-xl mb-1"></i><br>ADMIN</div>
+    </nav>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        function go(id, el) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-link'));
+            document.getElementById('page-' + id).classList.add('active');
+            el.classList.add('active-link');
+            tg.HapticFeedback.impactOccurred('medium');
         }
-    }
-    setInterval(updateMarket, 2000);
-</script>
+
+        // Signalni yangilash funksiyasi
+        function updateSignal() {
+            const pair = document.getElementById('in-pair').value;
+            const price = document.getElementById('in-price').value;
+            const tp = document.getElementById('in-tp').value;
+            const sl = document.getElementById('in-sl').value;
+            const rsi = document.getElementById('in-rsi').value;
+            const type = document.getElementById('in-type').value;
+
+            // Ekranda ko'rsatish
+            if(pair) document.getElementById('disp-pair').innerText = pair;
+            if(price) document.getElementById('disp-price').innerText = price;
+            if(tp) document.getElementById('disp-tp').innerText = tp;
+            if(sl) document.getElementById('disp-sl').innerText = sl;
+            if(rsi) document.getElementById('disp-rsi').innerText = rsi;
+            
+            const badge = document.getElementById('disp-type');
+            badge.innerText = type;
+            badge.className = type.includes('Buy') ? "bg-green-500 text-black px-3 py-1 rounded text-[10px] font-black uppercase" : "bg-red-500 text-white px-3 py-1 rounded text-[10px] font-black uppercase";
+
+            tg.showAlert("Signal muvaffaqiyatli o'zgartirildi!");
+            go('signal', document.querySelector('.nav-item')); // Signal betiga qaytish
+        }
+
+        const u = tg.initDataUnsafe?.user;
+        if(u) {
+            document.getElementById('u-name').innerText = u.first_name;
+            if(user.photo_url) document.getElementById('u-img').src = user.photo_url;
+        }
+    </script>
+</body>
+</html>
