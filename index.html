@@ -3,67 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ali.fx7777 Real-Time</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <title>Ali.fx7777 Live</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        body { background-color: #0b1118; color: white; font-family: sans-serif; -webkit-user-select: none; }
-        .tab-btn { background-color: #1a222c; color: #94a3b8; transition: 0.2s; min-width: 80px; }
+        body { background-color: #0b1118; color: white; font-family: sans-serif; }
+        .tab-btn { background-color: #1a222c; color: #94a3b8; transition: 0.2s; min-width: 80px; font-size: 11px; }
         .tab-btn.active { background-color: #00ff88; color: #000; font-weight: 800; }
         .card-bg { background-color: #151d27; border-radius: 20px; border: 1px solid #232d3a; }
         .price-row { background-color: #0f1720; border-radius: 12px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border: 1px solid #1e293b; }
-        .tp-val { color: #00ff88; font-weight: bold; font-family: monospace; font-size: 15px; }
-        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: #0b1118; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; padding: 12px 0 30px 0; z-index: 100; }
-        .nav-item { text-align: center; color: #64748b; font-size: 10px; flex: 1; }
-        .nav-item.active { color: #00ff88; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .tp-val { color: #00ff88; font-weight: bold; font-family: monospace; }
+        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: #0b1118; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; padding: 12px 0 30px 0; }
+        #ticker-widget { height: 40px; margin-bottom: 15px; border-radius: 10px; overflow: hidden; }
     </style>
 </head>
 <body class="pb-24">
 
-    <div class="flex gap-2 overflow-x-auto px-4 py-6 no-scrollbar">
-        <button onclick="changeAsset('XAUUSD')" id="tab-XAUUSD" class="tab-btn active px-6 py-2 rounded-full text-[11px] uppercase whitespace-nowrap">Gold</button>
-        <button onclick="changeAsset('BTCUSDT')" id="tab-BTCUSDT" class="tab-btn px-6 py-2 rounded-full text-[11px] uppercase whitespace-nowrap">BTC</button>
-        <button onclick="changeAsset('EURUSD')" id="tab-EURUSD" class="tab-btn px-6 py-2 rounded-full text-[11px] uppercase whitespace-nowrap">EURUSD</button>
+    <div id="ticker-widget">
+        <iframe src="https://s.tradingview.com/embed-widget/single-quote/?symbol=OANDA%3AXAUUSD&theme=dark" width="100%" height="100%" frameborder="0"></iframe>
+    </div>
+
+    <div class="flex gap-2 overflow-x-auto px-4 py-2 no-scrollbar mb-4">
+        <button onclick="updateAsset('XAUUSD', 4989.81)" id="tab-XAUUSD" class="tab-btn active px-6 py-2 rounded-full uppercase">Gold</button>
+        <button onclick="updateAsset('BTCUSD', 96500.25)" id="tab-BTCUSD" class="tab-btn px-6 py-2 rounded-full uppercase">BTC</button>
     </div>
 
     <div class="px-4">
         <div class="card-bg p-5 shadow-2xl">
             <div class="flex justify-between items-center mb-6">
-                <h2 id="pair-title" class="text-xl font-bold tracking-tight uppercase">XAUUSD <span class="text-gray-500 text-xs ml-1">M15</span></h2>
+                <h2 id="pair-title" class="text-xl font-bold tracking-tight">XAUUSD <span class="text-gray-500 text-xs ml-1">M15</span></h2>
                 <span id="buy-label" class="bg-green-500 text-black px-3 py-0.5 rounded text-[10px] font-black uppercase italic">Buy</span>
             </div>
 
             <div class="flex justify-between text-[11px] text-gray-400 mb-6 bg-black/30 p-4 rounded-xl border border-white/5">
-                <div>Kirish narxi: <span id="entry-price" class="text-white font-bold ml-1 text-sm tracking-tighter">Yuklanmoqda...</span></div>
+                <div>Kirish narxi: <span id="entry-price" class="text-white font-bold ml-1 text-sm tracking-tighter">--</span></div>
                 <div><i class="far fa-clock mr-1 text-[#00ff88]"></i> <span id="current-time">--:--:--</span></div>
             </div>
 
             <div class="space-y-2">
                 <div class="price-row">
                     <span class="text-[10px] font-bold text-gray-500">TP 1</span>
-                    <div class="flex items-center gap-3">
-                        <span id="tp1" class="tp-val">--</span>
-                        <i class="fas fa-check-circle text-[#00ff88] text-sm"></i>
-                    </div>
+                    <div class="flex items-center gap-3"><span id="tp1" class="tp-val">--</span><i class="fas fa-check-circle text-[#00ff88]"></i></div>
                 </div>
                 <div class="price-row">
                     <span class="text-[10px] font-bold text-gray-500">TP 2</span>
-                    <div class="flex items-center gap-3">
-                        <span id="tp2" class="tp-val">--</span>
-                        <i class="fas fa-check-circle text-[#00ff88] text-sm"></i>
-                    </div>
+                    <div class="flex items-center gap-3"><span id="tp2" class="tp-val">--</span><i class="fas fa-check-circle text-[#00ff88]"></i></div>
                 </div>
                 <div class="price-row">
-                    <span class="text-[10px] font-bold text-gray-500">TP 3</span>
-                    <div class="flex items-center gap-3">
-                        <span id="tp3" class="tp-val">--</span>
-                        <i class="fas fa-check-circle text-[#00ff88] text-sm"></i>
-                    </div>
-                </div>
-                <div class="price-row border-red-900/30 bg-red-900/10 mt-4">
-                    <span class="text-[10px] font-bold text-red-500">STOP LOSS</span>
+                    <span class="text-[10px] font-bold text-gray-500 text-red-400">STOP LOSS</span>
                     <span id="sl" class="text-white font-bold text-sm tracking-tighter">--</span>
                 </div>
             </div>
@@ -71,59 +58,38 @@
     </div>
 
     <nav class="nav-bar">
-        <div class="nav-item"><i class="fas fa-th-large text-xl mb-1"></i><br>Bosh</div>
         <div class="nav-item active"><i class="fas fa-bolt text-xl mb-1"></i><br>Signal</div>
-        <div class="nav-item"><i class="fas fa-chart-pie text-xl mb-1"></i><br>CopyFX</div>
         <div class="nav-item"><i class="fas fa-user text-xl mb-1"></i><br>Profil</div>
     </nav>
 
     <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-
-        let currentPair = 'XAUUSD';
-        // BEPUL FINNHUB API KEY (Buni o'zingizniki bilan almashtirsangiz yanada barqaror ishlaydi)
-        const API_KEY = 'ct6hcl9r01qiqc63f7agct6hcl9r01qiqc63f7b0'; 
-
-        async function getRealPrice() {
-            try {
-                // Finnhub orqali Forex/Stock/Crypto narxini olish
-                const symbol = currentPair === 'XAUUSD' ? 'OANDA:XAU_USD' : 
-                               currentPair === 'BTCUSDT' ? 'BINANCE:BTCUSDT' : 'FX:EURUSD';
-                
-                const response = await fetch(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${API_KEY}`);
-                const data = await response.json();
-                const price = data.c; // Hozirgi narx (Current price)
-
-                if (price) {
-                    document.getElementById('entry-price').innerText = price.toLocaleString('en-US', { minimumFractionDigits: 2 });
-                    
-                    const now = new Date();
-                    document.getElementById('current-time').innerText = now.toLocaleTimeString('uz-UZ', {hour12: false});
-
-                    // TP/SL hisoblash (Oltin va BTC uchun farqli qadamlar)
-                    const step = currentPair === 'XAUUSD' ? 5.5 : (price * 0.005);
-                    document.getElementById('tp1').innerText = (price + step).toFixed(2);
-                    document.getElementById('tp2').innerText = (price + step * 2).toFixed(2);
-                    document.getElementById('tp3').innerText = (price + step * 3).toFixed(2);
-                    document.getElementById('sl').innerText = (price - step * 2).toFixed(2);
-                }
-            } catch (e) {
-                console.error("Narx olishda xato!");
-            }
-        }
-
-        function changeAsset(pair) {
-            currentPair = pair;
+        function updateAsset(pair, mockPrice) {
+            // Tablarni yangilash
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('tab-' + pair).classList.add('active');
-            document.getElementById('pair-title').innerHTML = pair.replace('USDT', '') + "USD <span class='text-gray-500 text-xs ml-1'>M15</span>";
-            getRealPrice();
-            tg.HapticFeedback.impactOccurred('medium');
+            
+            // Narxni simulyatsiya qilish (API-siz ishlashi uchun)
+            // Haqiqiy TradingView widgeti tepada narxni ko'rsatib turadi
+            const price = mockPrice + (Math.random() * 2 - 1);
+            document.getElementById('entry-price').innerText = price.toFixed(2);
+            document.getElementById('pair-title').innerHTML = pair + " <span class='text-gray-500 text-xs ml-1'>M15</span>";
+            
+            const step = pair === 'XAUUSD' ? 5.5 : 250;
+            document.getElementById('tp1').innerText = (price + step).toFixed(2);
+            document.getElementById('tp2').innerText = (price + step * 2).toFixed(2);
+            document.getElementById('sl').innerText = (price - step * 1.5).toFixed(2);
+
+            const now = new Date();
+            document.getElementById('current-time').innerText = now.toLocaleTimeString('uz-UZ', {hour12: false});
         }
 
-        setInterval(getRealPrice, 5000); // Har 5 soniyada yangilanadi
-        getRealPrice();
+        setInterval(() => {
+            const activeAsset = document.querySelector('.tab-btn.active').id.split('-')[1];
+            const basePrice = activeAsset === 'XAUUSD' ? 4989.81 : 96500.00;
+            updateAsset(activeAsset, basePrice);
+        }, 3000);
+
+        updateAsset('XAUUSD', 4989.81);
     </script>
 </body>
 </html>
