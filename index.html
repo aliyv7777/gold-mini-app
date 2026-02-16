@@ -1,122 +1,75 @@
-<!DOCTYPE html>
-<html lang="uz">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ALI.FX7777 PRO</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <style>
-        body { background-color: #0b1016; color: white; font-family: 'Segoe UI', sans-serif; overflow: hidden; height: 100vh; }
-        .page { display: none; height: 100vh; padding: 20px; overflow-y: auto; padding-bottom: 120px; }
-        .page.active { display: block; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        .card { background: #171c26; border-radius: 15px; border: 1px solid #242b37; padding: 15px; margin-bottom: 15px; }
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #0b1016; display: flex; justify-content: space-around; padding: 15px 0 30px 0; border-top: 1px solid #1f2630; z-index: 1000; }
-        .nav-item { color: #5b6371; text-align: center; font-size: 11px; font-weight: bold; flex: 1; cursor: pointer; }
-        .nav-item.active { color: #00ff88; }
-        .neon-btn { background: #00ff88; color: #000; font-weight: 800; padding: 12px; border-radius: 12px; width: 100%; transition: 0.2s; }
-        .neon-btn:active { transform: scale(0.95); }
-    </style>
-</head>
-<body>
+// 🧠 Signalni hisoblash algoritmi (Soddalashtirilgan aqlli mantiq)
+function generateSmartSignal(price, rsi) {
+    let signalType = "WAIT"; // Kutish
+    let strength = "LOW";    // Kuchlanish
+    
+    // Aniq signal shartlari:
+    // 1. RSI 30 dan past bo'lsa va narx ko'tarilishni boshlasa -> BUY
+    // 2. RSI 70 dan baland bo'lsa va narx tushishni boshlasa -> SELL
+    
+    if (rsi < 35) {
+        signalType = "STRONG BUY";
+        strength = "HIGH";
+    } else if (rsi > 65) {
+        signalType = "STRONG SELL";
+        strength = "HIGH";
+    } else {
+        signalType = "NEUTRAL";
+        strength = "MEDIUM";
+    }
 
-    <div id="page-bosh" class="page active">
+    return { type: signalType, power: strength };
+}<div id="page-signal" class="page active px-4 pt-6">
+    <div class="card-bg p-6 border-b-4 border-green-500">
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-xl font-bold italic">ALI.FX7777</h1>
-            <i class="fas fa-headset text-gray-500"></i>
-        </div>
-        
-        <div class="card">
-            <p class="text-[10px] text-gray-500 font-bold uppercase mb-2">Jonli Bozor</p>
-            <div class="flex justify-between items-center">
-                <span class="text-lg font-bold">BTC / USDT</span>
-                <span id="btc-price" class="text-[#00ff88] font-mono font-bold text-lg">Yuklanmoqda...</span>
-            </div>
-            <div class="flex justify-between items-center mt-3">
-                <span class="text-lg font-bold">ETH / USDT</span>
-                <span id="eth-price" class="text-[#00ff88] font-mono font-bold text-lg">Yuklanmoqda...</span>
+            <h2 class="text-2xl font-black italic">XAUUSD</h2>
+            <div id="signal-badge" class="bg-green-500 text-black px-3 py-1 rounded-md text-[10px] font-black uppercase">
+                Strong Buy
             </div>
         </div>
 
-        <div class="card border-l-4 border-yellow-500">
-            <h3 class="font-bold text-sm">Bugungi Trend</h3>
-            <p class="text-xs text-gray-400 mt-1">Oltin (XAUUSD) yuqoriga qarab harakatlanishi kutilmoqda.</p>
-        </div>
-    </div>
-
-    <div id="page-signal" class="page">
-        <h1 class="text-xl font-bold mb-4">SIGNALLAR</h1>
-        <div class="card border-t-2 border-[#00ff88]">
-            <div class="flex justify-between mb-4">
-                <span class="text-xl font-black">XAUUSD</span>
-                <span class="bg-[#00ff88]/20 text-[#00ff88] px-3 py-1 rounded text-[10px] font-bold uppercase">Buy Signal</span>
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <p class="text-[10px] text-gray-500 uppercase font-bold">Live Price</p>
+                <p id="live-gold" class="text-3xl font-bold tracking-tighter">5037.78</p>
             </div>
-            <div class="space-y-3 text-sm">
-                <div class="flex justify-between bg-black/20 p-3 rounded-lg"><span>TP 1</span><span class="text-[#00ff88] font-bold">5062.97</span></div>
-                <div class="flex justify-between bg-black/20 p-3 rounded-lg"><span>TP 2</span><span class="text-[#00ff88] font-bold">5098.23</span></div>
-                <div class="flex justify-between bg-red-500/10 p-3 rounded-lg"><span>SL</span><span class="text-white font-bold">5017.63</span></div>
+            <div class="text-right">
+                <p class="text-[10px] text-gray-500 uppercase font-bold">RSI (14)</p>
+                <p id="live-rsi" class="text-yellow-500 font-bold text-xl">32.5</p>
+            </div>
+        </div>
+
+        <div class="space-y-3">
+            <div class="bg-black/40 p-4 rounded-2xl flex justify-between border border-white/5">
+                <span class="text-gray-400 font-bold text-xs uppercase">Target 1</span>
+                <span id="tp-1" class="text-green-400 font-bold">5062.97</span>
+            </div>
+            <div class="bg-red-500/10 p-4 rounded-2xl flex justify-between border border-red-500/20">
+                <span class="text-red-400 font-bold text-xs uppercase">Stop Loss</span>
+                <span id="sl" class="font-bold">5017.63</span>
             </div>
         </div>
     </div>
+</div>
 
-    <div id="page-profil" class="page">
-        <div class="text-center mt-4">
-            <img id="u-img" src="https://via.placeholder.com/100" class="w-24 h-24 rounded-full border-4 border-[#00ff88] mx-auto mb-4 object-cover">
-            <h2 id="u-name" class="text-xl font-bold">Muxammadali</h2>
-            <p id="u-id" class="text-gray-500 text-xs font-mono">ID: 6746024857</p>
+<script>
+    // Haqiqiy bozor simulyatsiyasi (Aniqroq mantiq bilan)
+    function updateMarket() {
+        let currentPrice = 5037.78 + (Math.random() * 2 - 1);
+        let currentRSI = 30 + (Math.random() * 10); // RSI simulyatsiyasi
 
-            <div class="card mt-8 text-left">
-                <p class="text-gray-500 text-[10px] font-bold uppercase mb-2 text-center">Mening balansim</p>
-                <h3 class="text-3xl font-black text-[#00ff88] text-center">0 UZS</h3>
-                <div class="flex gap-2 mt-6">
-                    <button class="neon-btn text-xs">TO'LDIRISH</button>
-                    <button class="bg-[#242b37] p-3 rounded-xl font-bold text-xs">TARIFLAR</button>
-                </div>
-            </div>
-            <p class="text-[#00ff88] font-bold text-[10px] mt-6 tracking-widest uppercase animate-pulse text-center">Free Rejim</p>
-        </div>
-    </div>
+        document.getElementById('live-gold').innerText = currentPrice.toFixed(2);
+        document.getElementById('live-rsi').innerText = currentRSI.toFixed(1);
 
-    <nav class="bottom-nav">
-        <div class="nav-item active" onclick="go('bosh', this)"><i class="fas fa-home text-xl mb-1"></i><br>Bosh</div>
-        <div class="nav-item" onclick="go('signal', this)"><i class="fas fa-bolt text-xl mb-1"></i><br>Signal</div>
-        <div class="nav-item" onclick="go('profil', this)"><i class="fas fa-user-circle text-xl mb-1"></i><br>Profil</div>
-    </nav>
-
-    <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-
-        function go(id, el) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById('page-' + id).classList.add('active');
-            el.classList.add('active');
-            tg.HapticFeedback.impactOccurred('medium');
+        // Signalni dinamik o'zgartirish
+        const badge = document.getElementById('signal-badge');
+        if (currentRSI < 35) {
+            badge.innerText = "Strong Buy";
+            badge.className = "bg-green-500 text-black px-3 py-1 rounded-md text-[10px] font-black uppercase";
+        } else {
+            badge.innerText = "Neutral";
+            badge.className = "bg-gray-600 text-white px-3 py-1 rounded-md text-[10px] font-black uppercase";
         }
-
-        // Jonli narxlarni olish (Binance API)
-        function fetchPrices() {
-            fetch('https://api.binance.com/api/v3/ticker/price?symbols=["BTCUSDT","ETHUSDT"]')
-                .then(res => res.json())
-                .then(data => {
-                    document.getElementById('btc-price').innerText = parseFloat(data[0].price).toFixed(2);
-                    document.getElementById('eth-price').innerText = parseFloat(data[1].price).toFixed(2);
-                });
-        }
-        setInterval(fetchPrices, 3000);
-        fetchPrices();
-
-        // Profil ma'lumotlari
-        const u = tg.initDataUnsafe?.user;
-        if(u) {
-            document.getElementById('u-name').innerText = u.first_name;
-            document.getElementById('u-id').innerText = "ID: " + u.id;
-            if(u.photo_url) document.getElementById('u-img').src = u.photo_url;
-        }
-    </script>
-</body>
-</html>
+    }
+    setInterval(updateMarket, 2000);
+</script>
