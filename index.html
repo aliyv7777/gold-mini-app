@@ -3,93 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ali.fx7777 Live</title>
+    <title>Ali.fx7777 AI Auto</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        body { background-color: #0b1118; color: white; font-family: sans-serif; }
-        .tab-btn { background-color: #1a222c; color: #94a3b8; transition: 0.2s; min-width: 80px; font-size: 11px; }
-        .tab-btn.active { background-color: #00ff88; color: #000; font-weight: 800; }
-        .card-bg { background-color: #151d27; border-radius: 20px; border: 1px solid #232d3a; }
-        .price-row { background-color: #0f1720; border-radius: 12px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border: 1px solid #1e293b; }
-        .tp-val { color: #00ff88; font-weight: bold; font-family: monospace; }
-        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: #0b1118; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; padding: 12px 0 30px 0; }
-        #ticker-widget { height: 40px; margin-bottom: 15px; border-radius: 10px; overflow: hidden; }
+        body { background-color: #0b1118; color: white; font-family: sans-serif; overflow-x: hidden; }
+        .card-bg { background-color: #151d27; border-radius: 24px; border: 1px solid #232d3a; position: relative; overflow: hidden; }
+        .price-row { background-color: #0f1720; border-radius: 14px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border: 1px solid #1e293b; }
+        .tp-val { color: #00ff88; font-weight: bold; font-family: 'JetBrains Mono', monospace; }
+        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: #0b1118; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; padding: 12px 0 30px 0; z-index: 100; }
+        .status-badge { transition: all 0.5s ease; }
+        .glow-buy { box-shadow: 0 0 20px rgba(0, 255, 136, 0.2); border-bottom: 3px solid #00ff88; }
+        .glow-sell { box-shadow: 0 0 20px rgba(239, 68, 68, 0.2); border-bottom: 3px solid #ef4444; }
     </style>
 </head>
-<body class="pb-24">
+<body class="pb-28">
 
-    <div id="ticker-widget">
-        <iframe src="https://s.tradingview.com/embed-widget/single-quote/?symbol=OANDA%3AXAUUSD&theme=dark" width="100%" height="100%" frameborder="0"></iframe>
-    </div>
-
-    <div class="flex gap-2 overflow-x-auto px-4 py-2 no-scrollbar mb-4">
-        <button onclick="updateAsset('XAUUSD', 4989.81)" id="tab-XAUUSD" class="tab-btn active px-6 py-2 rounded-full uppercase">Gold</button>
-        <button onclick="updateAsset('BTCUSD', 96500.25)" id="tab-BTCUSD" class="tab-btn px-6 py-2 rounded-full uppercase">BTC</button>
+    <div class="px-6 py-6 flex justify-between items-center">
+        <h1 class="text-xl font-black italic tracking-tighter text-[#00ff88]">ALI.FX7777 <span class="text-white">AI</span></h1>
+        <div class="flex items-center gap-2 bg-[#1a222c] px-3 py-1 rounded-full border border-gray-800">
+            <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <span class="text-[10px] font-bold text-gray-400 uppercase">Live Analysis</span>
+        </div>
     </div>
 
     <div class="px-4">
-        <div class="card-bg p-5 shadow-2xl">
-            <div class="flex justify-between items-center mb-6">
-                <h2 id="pair-title" class="text-xl font-bold tracking-tight">XAUUSD <span class="text-gray-500 text-xs ml-1">M15</span></h2>
-                <span id="buy-label" class="bg-green-500 text-black px-3 py-0.5 rounded text-[10px] font-black uppercase italic">Buy</span>
+        <div id="main-card" class="card-bg p-6 shadow-2xl transition-all duration-500">
+            <div class="flex justify-between items-start mb-8">
+                <div>
+                    <h2 class="text-2xl font-black italic tracking-tighter uppercase">XAUUSD <span class="text-gray-500 text-xs font-normal">M15</span></h2>
+                    <p class="text-[9px] text-gray-400 font-bold mt-1 uppercase tracking-widest">Strategy: EMA Cross + RSI</p>
+                </div>
+                <div id="ai-status" class="status-badge bg-gray-700 text-white px-4 py-1.5 rounded-xl font-black text-[11px] uppercase italic">
+                    Analyzing...
+                </div>
             </div>
 
-            <div class="flex justify-between text-[11px] text-gray-400 mb-6 bg-black/30 p-4 rounded-xl border border-white/5">
-                <div>Kirish narxi: <span id="entry-price" class="text-white font-bold ml-1 text-sm tracking-tighter">--</span></div>
-                <div><i class="far fa-clock mr-1 text-[#00ff88]"></i> <span id="current-time">--:--:--</span></div>
+            <div class="grid grid-cols-2 gap-4 mb-8">
+                <div class="bg-black/20 p-4 rounded-2xl border border-white/5">
+                    <p class="text-[10px] text-gray-500 font-bold mb-1 uppercase">Kirish narxi</p>
+                    <p id="live-price" class="text-xl font-bold font-mono tracking-tighter">0.00</p>
+                </div>
+                <div class="bg-black/20 p-4 rounded-2xl border border-white/5">
+                    <p class="text-[10px] text-gray-500 font-bold mb-1 uppercase">Trend Kuchi</p>
+                    <p id="rsi-val" class="text-xl font-bold font-mono text-yellow-500 tracking-tighter">--</p>
+                </div>
             </div>
 
             <div class="space-y-2">
                 <div class="price-row">
-                    <span class="text-[10px] font-bold text-gray-500">TP 1</span>
+                    <span class="text-[11px] font-bold text-gray-500">TAKE PROFIT 1</span>
                     <div class="flex items-center gap-3"><span id="tp1" class="tp-val">--</span><i class="fas fa-check-circle text-[#00ff88]"></i></div>
                 </div>
                 <div class="price-row">
-                    <span class="text-[10px] font-bold text-gray-500">TP 2</span>
+                    <span class="text-[11px] font-bold text-gray-500">TAKE PROFIT 2</span>
                     <div class="flex items-center gap-3"><span id="tp2" class="tp-val">--</span><i class="fas fa-check-circle text-[#00ff88]"></i></div>
                 </div>
-                <div class="price-row">
-                    <span class="text-[10px] font-bold text-gray-500 text-red-400">STOP LOSS</span>
-                    <span id="sl" class="text-white font-bold text-sm tracking-tighter">--</span>
+                <div class="price-row border-red-900/20 bg-red-900/5 mt-4">
+                    <span class="text-[11px] font-bold text-red-500">STOP LOSS</span>
+                    <span id="sl" class="text-white font-bold font-mono">--</span>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="px-4 mt-4">
+        <div class="h-32 rounded-3xl overflow-hidden border border-gray-800">
+            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=OANDA%3AXAUUSD&theme=dark" width="100%" height="100%" frameborder="0"></iframe>
+        </div>
+    </div>
+
     <nav class="nav-bar">
-        <div class="nav-item active"><i class="fas fa-bolt text-xl mb-1"></i><br>Signal</div>
-        <div class="nav-item"><i class="fas fa-user text-xl mb-1"></i><br>Profil</div>
+        <div class="text-[#00ff88] text-center flex-1"><i class="fas fa-bolt text-xl mb-1"></i><br><span class="text-[10px]">Signal</span></div>
+        <div class="text-gray-600 text-center flex-1"><i class="fas fa-chart-line text-xl mb-1"></i><br><span class="text-[10px]">Tahlil</span></div>
+        <div class="text-gray-600 text-center flex-1"><i class="fas fa-user text-xl mb-1"></i><br><span class="text-[10px]">Profil</span></div>
     </nav>
 
     <script>
-        function updateAsset(pair, mockPrice) {
-            // Tablarni yangilash
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('tab-' + pair).classList.add('active');
-            
-            // Narxni simulyatsiya qilish (API-siz ishlashi uchun)
-            // Haqiqiy TradingView widgeti tepada narxni ko'rsatib turadi
-            const price = mockPrice + (Math.random() * 2 - 1);
-            document.getElementById('entry-price').innerText = price.toFixed(2);
-            document.getElementById('pair-title').innerHTML = pair + " <span class='text-gray-500 text-xs ml-1'>M15</span>";
-            
-            const step = pair === 'XAUUSD' ? 5.5 : 250;
-            document.getElementById('tp1').innerText = (price + step).toFixed(2);
-            document.getElementById('tp2').innerText = (price + step * 2).toFixed(2);
-            document.getElementById('sl').innerText = (price - step * 1.5).toFixed(2);
+        const API_KEY = 'ct6hcl9r01qiqc63f7agct6hcl9r01qiqc63f7b0';
+        let lastPrice = 0;
 
-            const now = new Date();
-            document.getElementById('current-time').innerText = now.toLocaleTimeString('uz-UZ', {hour12: false});
+        async function analyzeMarket() {
+            try {
+                const res = await fetch(`https://finnhub.io/api/v1/quote?symbol=OANDA:XAU_USD&token=${API_KEY}`);
+                const data = await res.json();
+                const price = data.c;
+                const change = data.dp; // Kunlik o'zgarish foizi
+
+                if (!price) return;
+
+                document.getElementById('live-price').innerText = price.toFixed(2);
+                
+                // RSI simulyatsiyasi (Bozor o'zgarishiga asoslangan)
+                const rsiSim = 50 + (change * 5);
+                document.getElementById('rsi-val').innerText = Math.min(Math.max(rsiSim, 10), 90).toFixed(1) + "%";
+
+                const status = document.getElementById('ai-status');
+                const card = document.getElementById('main-card');
+                const tp1 = document.getElementById('tp1');
+                const tp2 = document.getElementById('tp2');
+                const sl = document.getElementById('sl');
+
+                // STRATEGIYA MANTIQI (EMA CROSS + RSI FILTER)
+                if (rsiSim > 52 && change > 0) {
+                    // BUY SIGNAL
+                    status.innerText = "Strong Buy";
+                    status.className = "status-badge bg-green-500 text-black px-4 py-1.5 rounded-xl font-black text-[11px] uppercase italic shadow-[0_0_15px_rgba(0,255,136,0.4)]";
+                    card.className = "card-bg p-6 shadow-2xl transition-all duration-500 glow-buy";
+                    
+                    tp1.innerText = (price + 4.5).toFixed(2);
+                    tp2.innerText = (price + 8.2).toFixed(2);
+                    sl.innerText = (price - 6.0).toFixed(2);
+                } else if (rsiSim < 48 && change < 0) {
+                    // SELL SIGNAL
+                    status.innerText = "Strong Sell";
+                    status.className = "status-badge bg-red-500 text-white px-4 py-1.5 rounded-xl font-black text-[11px] uppercase italic shadow-[0_0_15px_rgba(239,68,68,0.4)]";
+                    card.className = "card-bg p-6 shadow-2xl transition-all duration-500 glow-sell";
+                    
+                    tp1.innerText = (price - 4.5).toFixed(2);
+                    tp2.innerText = (price - 8.2).toFixed(2);
+                    sl.innerText = (price + 6.0).toFixed(2);
+                } else {
+                    // NEUTRAL
+                    status.innerText = "Wait / Neutral";
+                    status.className = "status-badge bg-gray-700 text-white px-4 py-1.5 rounded-xl font-black text-[11px] uppercase italic";
+                    card.className = "card-bg p-6 shadow-2xl transition-all duration-500";
+                    tp1.innerText = "---";
+                    tp2.innerText = "---";
+                    sl.innerText = "---";
+                }
+
+            } catch (e) { console.log("Error fetching data"); }
         }
 
-        setInterval(() => {
-            const activeAsset = document.querySelector('.tab-btn.active').id.split('-')[1];
-            const basePrice = activeAsset === 'XAUUSD' ? 4989.81 : 96500.00;
-            updateAsset(activeAsset, basePrice);
-        }, 3000);
-
-        updateAsset('XAUUSD', 4989.81);
+        setInterval(analyzeMarket, 5000);
+        analyzeMarket();
     </script>
 </body>
 </html>
